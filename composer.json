@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-4" : {"Src\\" : "src"}
+    },
+    "require": {
+        "twig/twig": "3.0",
+        "rbdwllr/reallysimplejwt": "^4.0",
+        "haydenpierce/class-finder": "^0.4.3",
+        "phpmailer/phpmailer": "^6.6",
+        "guzzlehttp/guzzle": "7.0"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "urls": {
+        "base": "/ApiSkeleton/"
+    }, 
+    "database": {
+        "host":  "localhost", 
+        "user": "root",
+        "name" : "myrecode",
+        "pass" : ""
+    },
+    "sossuke": {
+        "host":  "localhost", 
+        "user": "root",
+        "name" : "devis",
+        "pass" : ""
+    },
+    "security": {
+        "app_secret" : "sec!ReT423*&"
+    },
+    "mailer": {
+        "host" : "mail01.one2net.net",
+        "username" : "myrecode@recode.fr", 
+        "password" : "48zAjdXdt$256"
+    }
+}
