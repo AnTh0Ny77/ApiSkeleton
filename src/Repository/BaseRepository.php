@@ -329,6 +329,188 @@ Class BaseRepository {
         $request->execute($arraySetClause);
     }
 
+
+        public static function renderParam(){
+            return  [
+                'start' => 'tk__titre',
+                'end' => 'cli__ville',
+                'self' => [
+                    'name' => 'ticket' , 
+                    'alias' => 't',
+                    'field' => [
+                        'tk__id' => 'in' ,
+                        'tk__lu' => 'in',
+                        'tk__motif' => 'in',
+                        'tk__titre' => 'like' , 
+                        'tk__groupe' => 'in', 
+                    ] 
+                ],
+                'materiel' => [
+                    'alias' => 'm',
+                    'type' => 'LEFT',
+                    'on' => [
+                        'mat__id' => 't.tk__motif_id'
+                    ],
+                    'field' => [
+                        'mat__id' => 'in' ,
+                        'mat__cli__id' => 'in' ,
+                        'mat__type' => 'like' , 
+                        'mat__marque' => 'like', 
+                        'mat__model' => 'like', 
+                        'mat__pn' => 'like',
+                        'mat__sn' => 'like', 
+                        'mat__idnec' => 'like'
+                    ]
+                ], 
+                'lien_user_client' => [
+                    'alias' => 'l',
+                    'type' => 'LEFT',
+                    'on' => [
+                        'luc__cli__id' => 'm.mat__cli__id'
+                    ],
+                    'field' => [
+                    
+                    ]
+                ], 
+                'client' => [
+                    'alias' => 'c',
+                    'type' => 'LEFT',
+                    'on' => [
+                        'cli__id' => 'l.luc__cli__id'
+                    ],
+                    'field' => [
+                        'cli__id' => 'like' ,
+                        'cli__nom' => 'like' , 
+                        'cli__ville' => 'like'
+                    ]
+                ], 'ticket_ligne' => [
+                    'alias' => 'y',
+                    'type' => 'LEFT',
+                    'on' => [
+                        'tkl__tk_id' => 't.tk__id'
+                    ],
+                    'field' => [
+                        'tkl__user_id_dest' => 'in',
+                        'tkl__user_id' => 'in'
+                    ]
+                ], 
+            ];
+    
+    }
+
+
+    public function search(array $in ,  $clause,  int $limit , array $order  , array $params ){
+
+        //////////////////////////////////////////////////////////////////////// CONFIG ///////////////////////////////////////////////////////////////////
+       
+
+        ////////////////////////////////////////////////////////////////////////////////////// LIMIT //////////////////////////////////////////////////////
+        $limit_clause = '';
+        if (!empty($limit)) {
+            $limit_clause .= ' LIMIT ' . intval($limit);
+        }
+       
+        ///////////////////////////////////////////////////////////////////////////// LEFT ///////////////////////////////////////////////////////////////////
+        $left_clause = '';
+        foreach ($params as $key => $value) {
+            if ($key != 'self' ) {
+                $left_clause .=   ' ' . $value['type'] . ' JOIN '.$key.' as '.  $value['alias'] .'  ON  ( ' . $value['alias'].'.';
+                foreach ($value['on'] as $keys => $entry) {
+                    $left_clause .=  $keys.' = '.$entry;
+                }
+                $left_clause .= ' ) ';
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////// IN ///////////////////////////////////////////////////////////
+            $in_clause = '';
+            foreach ($params as $key => $value) {
+                foreach ($value['field'] as $ref => $entry) {
+                    if ( $entry == 'in' or $entry == 'double') {
+                        foreach ($in as $search => $option) {
+                            
+                            if (!empty($option) ) {
+                                if ($search == $ref) {
+                                    $in_clause .= ' AND ( '.$value['alias'].'.'.$ref. ' IN ( ';
+                                    foreach ($in[$search] as $index =>  $input) {
+                                        if ($index === array_key_last($in[$search])){
+                                            $in_clause .=   '"'. $input . '" ) ';
+                                        }else{
+                                            $in_clause .= '"' . $input . '" , ';
+                                        }
+                                    }  
+                                    $in_clause .= ' )  ';
+                                }
+                            }   
+                        }
+                    }
+                }
+            }
+
+       ////////////////////////////////////////////////////////////////////////////// WHERE ///////////////////////////////////////////////////////////
+            $where_clause = '';
+            if (!empty($clause)) {
+                $filtre = str_replace("-", ' ', $clause);
+                $filtre = str_replace("'", ' ',$clause);
+                $nb_mots_filtre = str_word_count($filtre, 0, "0123456789");
+                $mots_filtre = str_word_count($filtre, 1, '0123456789');
+                $first = reset($params);
+                for ($i = 0; $i < $nb_mots_filtre; $i++){
+                    foreach ($params as $key => $value) {
+                        if (!empty($value['field'])) {
+                            foreach ($value['field'] as $field => $input) {
+                                if($input == 'like' or $input == 'double'){
+                                    if ($i == 0 ){
+                                        if ($field == $params['self']['start']) {
+                                            $where_clause .=  ' AND ( ( ' .  $value['alias'].'.'.$field  . ' LIKE "%' .$mots_filtre[$i] .'%" )';
+                                        }else {
+                                            $where_clause .=  ' OR  ( ' .  $value['alias'].'.'.$field  . ' LIKE "%' .$mots_filtre[$i] .'%" ) ';
+                                        }
+                                        if ($field == $params['self']['end']) {
+                                            $where_clause .= ' ) ';
+                                        }
+                                        
+                                    }else {
+                                        if ($field == $params['self']['start']) {
+                                            $where_clause .=   ' AND ( ( ' .  $value['alias'].'.'.$field  .'  LIKE "%' .$mots_filtre[$i] .'%" ) ';
+                                        }else {
+                                            $where_clause .=   ' OR ( ' .  $value['alias'].'.'.$field  .'  LIKE "%' .$mots_filtre[$i] .'%" ) ';
+                                        }
+                                        if ($field == $params['self']['end']) {
+                                            $where_clause .= ' ) ';
+                                        }
+                                       
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
+        
+                $orderclause = '';
+                if (!empty($order)) {
+                    $orderclause .= 'ORDER BY';
+                }  
+            }
+
+     ////////////////////////////////////////////////////////////////////////////// ORDER ///////////////////////////////////////////////////////////
+     $orderclause = " ";
+        foreach ($order as $key => $value) {
+            if ($key === array_key_last($order)){
+                $orderclause .= ' '.$key . ' ' . $value . ' ' ;
+            }else {
+                $orderclause .= ' '.$key . ' ' . $value . ', ' ;
+            }
+        }
+
+    ///////////////////////////////////////////////////////////////////////////////// FINAL ////////////////////////////////////////////////////////////////////////
+        $clause = 'SELECT DISTINCT  *  FROM ' . $params['self']['name'] . ' as ' . $params['self']['alias'].' '. $left_clause . ' WHERE 1 = 1 ' . $in_clause . ' ' . $where_clause . ' ' .  $orderclause  .'  ' . $limit_clause . '';
+       
+        $request = $this->Db->Pdo->query($clause);
+        return  $request->fetchAll(PDO::FETCH_ASSOC);
+    }
+
    
 
 }
