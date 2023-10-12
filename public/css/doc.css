@@ -1,0 +1,112 @@
+
+.container-operation{
+    margin-top: 20px;
+    background: #FFFFFF;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.16);
+    border-radius: 10px;
+}
+.h2-api{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 56px;
+}
+
+.h4-api{
+    margin-top: 25px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 17px;
+}
+
+.POST{
+    background-color: #93C572;
+    color: #FFFFFF;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    padding-left: 2%;
+   
+}
+
+.GET{
+    background-color: lightblue;
+    color: #FFFFFF;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    padding-left: 2%;
+    
+}
+
+.PUT{
+    background-color: lightsalmon;
+    color: #FFFFFF;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    padding-left: 2%;
+    
+}
+
+.DELETE{
+    background-color: lightcoral;
+    color: #FFFFFF;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    padding-left: 2%;
+    
+}
+
+.path{
+    color: #FFFFFF;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    padding-right: 2%;
+    font-size: 18px;
+    line-height: 21px;
+}
+
+.text-api{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 14px;
+    color: #8A8A8A;
+}
+
+.container-details{
+    padding-left: 2%;
+}
+.container-details-droite{
+    padding-right: 2%;
+}
+
+.btn-recode-mini{
+    background-color: #C1E1C1;
+    color: whitesmoke;
+    border: none;
+    padding: 12px 27px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+.btn-recode-mini:hover{
+    background-color: #E9DCC9;
+    color: #8A8A8A;
+}
